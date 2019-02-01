@@ -44,7 +44,7 @@ def validate_orgid(orgid):
     # Conditions of failure (two conditions)
     # Condition 1:
     if control == 10: # this is the most opaque part of the algorithm description
-        return False  # left seperate for illustration
+        control = 0   # if remainder is 10, treat it as 0.
     # Condition 2:
     elif control != digits[-1]: # This is the actual test
         return False
