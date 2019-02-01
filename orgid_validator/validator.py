@@ -23,32 +23,50 @@
 #       as of 2019-02-01.
 
 # These weights are provided by BRREG
-weights = [3, 2, 7, 6, 5, 4, 3, 2]
+WEIGHTS = [3, 2, 7, 6, 5, 4, 3, 2]
 
 def validate_orgid(orgid):
+    """
+    Checks passed argument, orgid, against the algorithm used to create
+    Norwegian Organizational IDs.
 
+    Returns True if it validates, False otherwise.
+    """
     # Convert the digits into a list of integers
     # (but first convert it to a string)
     digits = [int(id) for id in str(orgid)]
 
     # Length requirement
+    # "Organisasjonsnummeret består av 9 siffer"
     if len(digits) != 9:
         return False
-    sum = 0
 
-    # Create control digit (last digit)
-    for weight, digit in zip(weights, digits):
-       sum = sum + (weight * digit)
-    control = 11 - (sum % 11)
+    # "Organisasjonsnummeret består av 9 siffer hvor det siste sifferet er et
+    # kontrollsiffer beregnet med standard vekter, modulus 11. Etter dette blir
+    # vektene 3, 2, 7, 6, 5, 4, 3 og 2 regnet fra første siffer. Sifrene i
+    # feltet multipliseres med vekttallene 2, 3, 4, 5, 6, 7, 2, 3 osv. regnet
+    # fra høyre mot venstre."
+    product_sum = 0
+    for weight, digit in zip(WEIGHTS, digits):
+        product_sum = product_sum + (weight * digit)
 
-    # Conditions of failure (two conditions)
-    # Condition 1:
-    if control == 10: # this is the most opaque part of the algorithm description
-        control = 0   # if remainder is 10, treat it as 0.
-    # Condition 2:
-    elif control != digits[-1]: # This is the actual test
+    # "Produktsummen divideres med 11."
+    remainder = product_sum % 11
+
+    # "Hvis kontrollsifferet blir 10 (rest = 1) må kontrollsifferet erstattes
+    # med minus-tegn (-). Minus-tegn (-) er ikke lovlig kontrollsiffer for
+    # organisasjonsnummer."
+    if remainder == 1: # this is the most opaque part of the algorithm description
+        return False   # not sure if this is correct still
+    # "Hvis divisjonen går opp (rest = 0), blir kontrollsifferet 0"
+    if remainder == 0:
+        control = 0
+        # "Resten etter divisjonen trekkes fra 11 og resultatet blir kontrollsifferet."
+    else:
+        control = 11 - remainder
+
+    if control != digits[-1]: # This is the actual test
         return False
 
     # Counterfactual: The orgid must be correct
-    else:
-        return True
+    return True
