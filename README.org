@@ -1,15 +1,30 @@
 #+TITLE: Validates orgids issued by the Norwegian Business Registries
 
+* Summary
 
-* From the business registries
+The Norwegian Business Registries issues a unique ID to all Norwegian
+organizations (specifically those registered in `Enhetsregisteret') upon their creation.
 
-https://www.brreg.no/om-oss/oppgavene-vare/alle-registrene-vare/om-enhetsregisteret/organisasjonsnummeret/
+Those IDs contain 9 digits, where the last is a `control' or verification digit
+created by an alogorithm.
 
+This library tests numbers (presumably organizational IDs) against this algorithm.
+
+Typical use case:
+You have a number you think may be an organizational ID, but you are not sure.
+Perhaps you got the number from historical records about Norwegian organizations.
+This library will help you check if this ID is actually valid.
+
+
+* Description of algorithm (from the business registries webpage) (in Norwegian)
+
+[[https://www.brreg.no/om-oss/oppgavene-vare/alle-registrene-vare/om-enhetsregisteret/organisasjonsnummeret/][Source]]
 
 Alle som blir registrert i Enhetsregisteret og Foretaksregisteret får tildelt et organisasjonsnummer.
 
 Organisasjonsnummeret identifiserer juridiske personer m.m. og er nøkkelen til opplysningene som er lagret om dem i Brønnøysundregistrene. Alle som er registrert i Enhetsregisteret skal sørge for at organisasjonsnummer er med på forretningsdokumenter.
-Teknisk oppbygging av organisasjonsnummeret
+
+*Teknisk oppbygging av organisasjonsnummeret*
 
 Organisasjonsnummeret består av 9 siffer hvor det siste sifferet er et kontrollsiffer beregnet med standard vekter, modulus 11. Etter dette blir vektene 3, 2, 7, 6, 5, 4, 3 og 2 regnet fra første siffer.
 Modulus 11
