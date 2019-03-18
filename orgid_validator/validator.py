@@ -36,6 +36,11 @@ def validate_orgid(orgid):
     # (but first convert it to a string)
     digits = [int(id) for id in str(orgid)]
 
+    # UPDATE: After contacting BRREG I was told that these orgids can only start with 8 or 9.
+    # This is not specified in the algorithm document.
+    if digits[0] in ['8', '9']:
+        return False
+
     # Length requirement
     # "Organisasjonsnummeret består av 9 siffer"
     if len(digits) != 9:
