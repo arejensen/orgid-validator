@@ -38,7 +38,7 @@ def validate_orgid(orgid):
 
     # UPDATE: After contacting BRREG I was told that these orgids can only start with 8 or 9.
     # This is not specified in the algorithm document.
-    if digits[0] in ['8', '9']:
+    if digits[0] not in [8, 9]:
         return False
 
     # Length requirement
