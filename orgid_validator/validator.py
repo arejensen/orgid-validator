@@ -79,8 +79,8 @@ def validate_orgid(orgid, convert_func=None):
     # "Hvis kontrollsifferet blir 10 (rest = 1) må kontrollsifferet erstattes
     # med minus-tegn (-). Minus-tegn (-) er ikke lovlig kontrollsiffer for
     # organisasjonsnummer."
-    if remainder == 1: # this is the most opaque part of the algorithm description
-        return False   # not sure if this is correct still
+    if remainder == 1:  # this is the most opaque part of the algorithm description
+        return False  # not sure if this is correct still
     # "Hvis divisjonen går opp (rest = 0), blir kontrollsifferet 0"
     if remainder == 0:
         control = 0
@@ -88,7 +88,7 @@ def validate_orgid(orgid, convert_func=None):
     else:
         control = 11 - remainder
 
-    if control != digits[-1]: # This is the actual test
+    if control != digits[-1]:  # This is the actual test
         return False
 
     # Counterfactual: The orgid must be correct
