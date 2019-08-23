@@ -39,6 +39,9 @@ def validate_orgid(orgid, convert_func=None):
     will take the orgid as an argument and will return a converted orgid.
     """
 
+    if orgid in (True, False, None, []):
+        return False
+
     if convert_func:
         orgid = convert_func(orgid)
 
