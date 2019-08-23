@@ -22,28 +22,43 @@
 #       https://www.brreg.no/om-oss/oppgavene-vare/alle-registrene-vare/om-enhetsregisteret/organisasjonsnummeret/
 #       as of 2019-02-01.
 
+import math
+
 # These weights are provided by BRREG
 WEIGHTS = [3, 2, 7, 6, 5, 4, 3, 2]
 
-def validate_orgid(orgid):
+
+def validate_orgid(orgid, convert_func=None):
     """
     Checks passed argument, orgid, against the algorithm used to create
     Norwegian Organizational IDs.
 
     Returns True if it validates, False otherwise.
+
+    Takes an optional convert_func argument that expects a callable object that 
+    will take the orgid as an argument and will return a converted orgid.
     """
+
+    if convert_func:
+        orgid = convert_func(orgid)
+
+    # We don't care about loss of precision;
+    # if you need this, do it before passing orgid
+    if type(orgid) == float:
+        orgid = int(orgid)
+
+    # Length requirement
+    # "Organisasjonsnummeret består av 9 siffer"
+    if int(math.log10(orgid)) + 1 != 9:
+        return False
+
     # Convert the digits into a list of integers
-    # (but first convert it to a string)
-    digits = [int(id) for id in str(orgid)]
+    digits = [i for i in yield_digits(orgid)]
+    digits.reverse()
 
     # UPDATE: After contacting BRREG I was told that these orgids can only start with 8 or 9.
     # This is not specified in the algorithm document.
     if digits[0] not in [8, 9]:
-        return False
-
-    # Length requirement
-    # "Organisasjonsnummeret består av 9 siffer"
-    if len(digits) != 9:
         return False
 
     # "Organisasjonsnummeret består av 9 siffer hvor det siste sifferet er et
@@ -75,3 +90,13 @@ def validate_orgid(orgid):
 
     # Counterfactual: The orgid must be correct
     return True
+
+
+def yield_digits(i):
+    number = i
+    while number:
+        digit = number % 10
+        yield digit
+        number //= 10
+
+
